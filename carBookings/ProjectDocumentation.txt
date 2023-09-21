@@ -1,0 +1,8 @@
+carBooking (webApi):
+the carbooking Api will facilitate users for booking cars on journey 
+
+Resources:
+    User (both merchants and customers)
+    Car
+    Bookings
+    Driver (will add these functionality later)
