@@ -21,7 +21,7 @@ class TestViews(TestCase):
         response = self.assertEqual(response.status_code,201)
         
     def test_project_post_wrong_keyname(self):
-        data = {"usernaclear":"saurabh","password":"1234"}
+        data = {"username":"saurabh","password":"1234"}
         response = self.client.post(reverse("user-view"), data=data, content_type="application/json")
         
         response = self.assertEqual(response.status_code,400)
