@@ -1,0 +1,27 @@
+CarBookingApi:
+    These Api will provide facilities like booking a car for trip
+    user can book,cancel,update,delete booking
+    sharing seats with passenger will also be facilated
+    user can book a seat in an existing scheduled trip
+
+
+Reources:
+    1) User (Django's buit-in module will be used)
+
+    2) Car 
+
+    3) booking
+
+    ** Future Reources 
+    4) Driver
+
+Resource Planning:
+    Booking:
+    model: {
+        Source
+        Destination
+        JourneyStartDate
+        JourneyEndDate
+        User
+        Car
+    }

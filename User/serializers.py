@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.db import transaction
 
+class UserLoginSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+    username = serializers.CharField(required=True)
+    class Meta:
+        model = User
+        fields = ["id","username","password"]
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
@@ -12,9 +19,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "password"]
 
-    def validate_username(self, value):
+    def validate_username(self, value): 
         if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Username already exists")
+            raise serializers.ValidationError("Username already exists")        
         return value
 
     def remove_sensitive_fields(self, data):
