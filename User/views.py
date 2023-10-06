@@ -7,7 +7,12 @@ from rest_framework.decorators import action
 from . serializers import UserRegistrationSerializer
 from django.db import transaction
 from django.contrib.auth import authenticate,login
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .auth import TokenAuthenticationModified
+from rest_framework_simplejwt.tokens import RefreshToken,BlacklistMixin,SlidingToken
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class UserView(viewsets.ViewSet):
     queryset = User.objects.all()
@@ -74,10 +79,13 @@ class UserView(viewsets.ViewSet):
                     #print(user.username)
                     login(request,user)
                     #print(user.is_authenticated)
-                    token,created = Token.objects.get_or_create(user=user)
+                    #token,created = Token.objects.get_or_create(user=user)
+                    refresh = RefreshToken.for_user(user=user)
+                    token = str(refresh.access_token)
                     response = Response({"message": f"User {user.username} Login Successfully"})
-                    response["Authorization"] = f"{token.key}"
-                    #print(token.key)
+                    response["Authorization"] = f"{token}"
+                    print(token==str(refresh))
+                    response.set_cookie("refresh_token",str(refresh))
                     return response
                 else:
                     return Response({"message: ""Invalid Credentials, Try again"})
@@ -87,13 +95,9 @@ class UserView(viewsets.ViewSet):
         else:
             return Response(serialiser.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    
+    @authentication_classes([JWTAuthentication])
+    @permission_classes([IsAuthenticated])
     @action(detail=False, methods=["get"])
     def logout(self,request):
-        try:
-            with transaction.atomic():
-                user = request.user
-                token = Token.objects.filter(user=user)
-                token.delete()
-                return Response({"message":f"User {user.username} Logout Successfully"})
-        except Exception as e:
-            return Response({"detail":str(e)})
+        return Response({"message":"Logout is called"})

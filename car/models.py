@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 CAR_TYPES = (
@@ -18,3 +19,5 @@ class Car(models.Model):
     )
     brand = models.CharField(max_length=30,default="None")
     registration_number = models.CharField(max_length=40,unique=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
